@@ -40,3 +40,4 @@ scripts/corec
 *.bc
 .travis.yml
 build
+*.xcodeproj

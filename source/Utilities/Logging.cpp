@@ -54,7 +54,11 @@ namespace Logging
 		fprintf(outfile, "%s: %s%s\n", head.c_str(), fmtted, sdlerr.empty() ? "" : sdlerr.c_str());
 
 		if(level >= EXIT_THRESHOLD)
-			SDL_Quit();
+		{
+			SDL_Event quitevent;
+			quitevent.type = SDL_QUIT;
+			SDL_PushEvent(&quitevent);
+		}
 	}
 
 	void Logger::Info(const char* fmt, ...)

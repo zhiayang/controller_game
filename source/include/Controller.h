@@ -5,6 +5,7 @@
 #pragma once
 
 #include "Util.h"
+#include <thread>
 #include "SDLWrapper.h"
 
 class Controller
@@ -12,15 +13,19 @@ class Controller
 	public:
 		Controller();
 
-		void GameLoop();
-		void HandleSDLEvents();
 		void Cleanup();
+		void StartGame();
 
+		void GameLoop();
+		void SDLEventLoop();
 
-
+		bool isRunning() { return this->run; }
 		Controller* instance() { return this; }
 
 	private:
 		SDL::Window*	window;
 		SDL::Renderer*	renderer;
+		bool			run;
+
+		std::thread		eventLoop;
 };

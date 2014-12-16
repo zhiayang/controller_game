@@ -9,16 +9,40 @@
 
 namespace Math
 {
-	struct Point
+	struct Vector2
 	{
-		Point(uint32_t x, uint32_t y) : x(x), y(y) { }
-		uint32_t x;
-		uint32_t y;
+		Vector2() : x(0), y(0) { }
+		Vector2(int32_t x, int32_t y) : x(x), y(y) { }
+		int32_t x;
+		int32_t y;
+
+		Vector2 operator+(Vector2 other);
+		Vector2 operator-(Vector2 other);
+		Vector2 operator+=(Vector2 other);
+		bool operator==(Vector2 other);
+
+		static Vector2 zero() { return Vector2(0, 0); }
+	};
+
+	struct Vector3
+	{
+		Vector3() : x(0), y(0), z(0) { }
+		Vector3(int32_t x, int32_t y, int32_t z) : x(x), y(y), z(z) { }
+		int32_t x;
+		int32_t y;
+		int32_t z;
+
+		Vector3 operator+(Vector3 other);
+		Vector3 operator-(Vector3 other);
+		Vector3 operator+=(Vector3 other);
+		bool operator==(Vector3 other);
+
+		static Vector3 zero() { return Vector3(0, 0, 0); }
 	};
 
 	struct Rectangle
 	{
-		Point origin;
+		Vector2 origin;
 		uint32_t width;
 		uint32_t height;
 
@@ -27,15 +51,15 @@ namespace Math
 			return this->width * this->height;
 		}
 
-		Point centre()
+		Vector2 centre()
 		{
-			return Point(this->origin.x + (this->width / 2), this->origin.y + (this->height / 2));
+			return Vector2(this->origin.x + (this->width / 2), this->origin.y + (this->height / 2));
 		}
 	};
 
 	struct Circle
 	{
-		Point origin;
+		Vector2 origin;
 		uint32_t radius;
 
 		double area()

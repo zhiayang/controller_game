@@ -10,7 +10,7 @@ int main(int argc, char** argv)
 {
 	SDL::Initialise();
 	Controller gameInstance;
-	gameInstance.GameLoop();
+	gameInstance.StartGame();
 
 	return 0;
 }

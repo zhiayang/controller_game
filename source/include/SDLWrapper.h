@@ -46,13 +46,26 @@ namespace SDL
 		}
 
 		void Clear();
-		void Render(Texture* text, Math::Point at);
+		void Flush();
+
+
+		// primitive shapes
+		void RenderPoint(Math::Vector2 pt);
+		void RenderCircle(Math::Circle circ, bool fill = true);
+		void RenderRect(Math::Rectangle rect, bool fill = true);
+		void RenderLine(Math::Vector2 start, Math::Vector2 end);
+
+		// textures
+		void Render(Texture* text, Math::Vector2 at);
 		void Render(Texture* text, uint32_t x, uint32_t y);
 		void Render(Texture* text, Math::Rectangle dest);
 		void Render(Texture* text, Math::Rectangle src, Math::Rectangle dest);
-		void Flush();
+
+		void SetColour(Util::Colour c) { this->drawColour = c; }
+		Util::Colour GetColour() { return this->drawColour; }
 
 		SDL_Renderer* sdlRenderer;
+		Util::Colour drawColour;
 		Window* window;
 	};
 
