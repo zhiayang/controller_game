@@ -22,30 +22,32 @@ void Controller::Cleanup()
 
 	delete this->window;
 	delete this->renderer;
-
-	SDL_Quit();
-	exit(1);
 }
 
-void Controller::SDLEventLoop()
+bool Controller::CheckSDLEventQueue(int max)
 {
+	int done = 0;
+
 	SDL_Event event;
-	while(true)
+	while(this->run && done < max)
 	{
-		if(SDL_WaitEvent(&event))
+		if(SDL_PollEvent(&event))
 		{
+			done++;
 			switch(event.type)
 			{
 				case SDL_QUIT:
 					this->Cleanup();
-					break;
+					return false;
 			}
 		}
 	}
+
+	return true;
 }
 
 static const double fixedDeltaTimeMs = 10;
-void Controller::GameLoop()
+void Controller::UpdateLoop()
 {
 	// SDL::Texture* text = new SDL::Texture("aqua.png", this->renderer);
 	// delete text;
@@ -53,6 +55,7 @@ void Controller::GameLoop()
 	double accumulator = 0.0;
 	double currentTime = std::chrono::high_resolution_clock::now().time_since_epoch().count();
 
+	// no point checking for this->run here, since we will exit out if its false first thing.
 	while(this->run)
 	{
 		double newTime = std::chrono::high_resolution_clock::now().time_since_epoch().count();
@@ -66,8 +69,13 @@ void Controller::GameLoop()
 			accumulator -= fixedDeltaTimeMs;
 			Game::Update((float) fixedDeltaTimeMs);
 		}
+	}
+}
 
-
+void Controller::RenderLoop()
+{
+	while(this->run && this->CheckSDLEventQueue(4))
+	{
 		this->renderer->Clear();
 		this->renderer->SetColour(Util::Colour::black());
 
@@ -77,16 +85,29 @@ void Controller::GameLoop()
 	}
 }
 
+
+
+
+
+
+
 void Controller::StartGame()
 {
 	// init the game state first
 	Game::Start(this);
 
-	// start the event handler on a separate thread
-	this->eventLoop = std::thread(&Controller::SDLEventLoop, this);
-	this->GameLoop();
+	// curiously, SDL's event processing *must* be done on the main thread
+	// therefore start the gameloop in a separate thread
 
-	this->eventLoop.join();
+	// also curiously, SDL's rendering uses some thread-unsafe code from Cocoa (WHY, APPLE)
+	// therefore, all rendering must also be done in the main thread.
+
+	this->updateLoop = std::thread(&Controller::UpdateLoop, this);
+	this->RenderLoop();
+
+
+	this->updateLoop.join();
+	SDL_Quit();
 }
 
 

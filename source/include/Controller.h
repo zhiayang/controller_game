@@ -16,8 +16,9 @@ class Controller
 		void Cleanup();
 		void StartGame();
 
-		void GameLoop();
-		void SDLEventLoop();
+		void UpdateLoop();
+		void RenderLoop();
+		bool CheckSDLEventQueue(int max);
 
 		bool isRunning() { return this->run; }
 		Controller* instance() { return this; }
@@ -27,5 +28,5 @@ class Controller
 		SDL::Renderer*	renderer;
 		bool			run;
 
-		std::thread		eventLoop;
+		std::thread		updateLoop;
 };
