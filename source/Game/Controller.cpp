@@ -75,8 +75,6 @@ void Controller::GameLoop()
 		Game::Render(this->renderer);
 		this->renderer->Flush();
 	}
-
-	printf("quit\n");
 }
 
 void Controller::StartGame()
