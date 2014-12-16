@@ -22,12 +22,15 @@ void Controller::Cleanup()
 
 	delete this->window;
 	delete this->renderer;
+
+	SDL_Quit();
+	exit(1);
 }
 
 void Controller::SDLEventLoop()
 {
 	SDL_Event event;
-	while(this->run)
+	while(true)
 	{
 		if(SDL_WaitEvent(&event))
 		{
@@ -72,6 +75,8 @@ void Controller::GameLoop()
 		Game::Render(this->renderer);
 		this->renderer->Flush();
 	}
+
+	printf("quit\n");
 }
 
 void Controller::StartGame()
@@ -84,7 +89,6 @@ void Controller::StartGame()
 	this->GameLoop();
 
 	this->eventLoop.join();
-	SDL_Quit();
 }
 
 
