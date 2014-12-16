@@ -8,6 +8,7 @@
 #include <thread>
 #include "SDLWrapper.h"
 
+namespace Game { struct Game; }
 class Controller
 {
 	public:
@@ -18,7 +19,7 @@ class Controller
 
 		void UpdateLoop();
 		void RenderLoop();
-		bool CheckSDLEventQueue(int max);
+		bool CheckSDLEventQueue();
 
 		bool isRunning() { return this->run; }
 		Controller* instance() { return this; }
@@ -27,6 +28,6 @@ class Controller
 		SDL::Window*	window;
 		SDL::Renderer*	renderer;
 		bool			run;
-
+		Game::Game*		theGame;
 		std::thread		updateLoop;
 };

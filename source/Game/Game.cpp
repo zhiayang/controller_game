@@ -5,37 +5,32 @@
 #include "Game.h"
 namespace Game
 {
-	Scene* currentScene;
-	Controller* controller;
-
-	void Start(Controller* c)
+	Game::Game(Controller* c)
 	{
-		controller = c;
-		SwitchScene(new Scene());
+		this->controller = c;
+		this->currentScene = new Scene();
 	}
 
-	void Render(SDL::Renderer* r)
+	void Game::Render(SDL::Renderer* r)
 	{
-		assert(currentScene);
-		currentScene->Render(r);
+		this->currentScene->Render(r);
 	}
 
-	void Update(float dt)
+	void Game::Update(float dt)
 	{
-		assert(currentScene);
-		currentScene->Update(dt);
+		this->currentScene->Update(dt);
 	}
 
-	Scene* SwitchScene(Scene* newScene)
+	Scene* Game::SwitchScene(Scene* newScene)
 	{
-		Scene* old = currentScene;
-		currentScene = newScene;
+		Scene* old = this->currentScene;
+		this->currentScene = newScene;
 		return old;
 	}
 
-	Scene* GetScene()
+	Scene* Game::GetCurrentScene()
 	{
-		return currentScene;
+		return this->currentScene;
 	}
 }
 

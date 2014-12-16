@@ -5,6 +5,7 @@
 #include "Game.h"
 #include <thread>
 #include <chrono>
+#include <unistd.h>
 #include <SDL2/SDL.h>
 #include "Resources.h"
 #include "Controller.h"
@@ -24,73 +25,78 @@ void Controller::Cleanup()
 	delete this->renderer;
 }
 
-bool Controller::CheckSDLEventQueue(int max)
+bool Controller::CheckSDLEventQueue()
 {
-	int done = 0;
-
 	SDL_Event event;
-	while(this->run && done < max)
+	if(SDL_PollEvent(&event))
 	{
-		if(SDL_PollEvent(&event))
+		switch(event.type)
 		{
-			done++;
-			switch(event.type)
-			{
-				case SDL_QUIT:
+			case SDL_QUIT:
+				this->Cleanup();
+				return false;
+
+			// special handling for command-q
+			case SDL_KEYDOWN:
+				if(event.key.keysym.sym == SDLK_q && (SDLK_LGUI || SDLK_RGUI))
+				{
 					this->Cleanup();
 					return false;
-
-				// special handling for command-q
-				case SDL_KEYDOWN:
-					if(event.key.keysym.sym == SDLK_q && (SDLK_LGUI || SDLK_RGUI))
-					{
-						this->Cleanup();
-						return false;
-					}
-					break;
-			}
+				}
+				break;
 		}
 	}
-
 	return true;
 }
 
-static const double fixedDeltaTimeMs = 10;
+static const double fixedDeltaTimeNs = 50.0 * 1000.0 * 1000.0;
 void Controller::UpdateLoop()
 {
+	using namespace std::chrono;
 	// SDL::Texture* text = new SDL::Texture("aqua.png", this->renderer);
 	// delete text;
 
 	double accumulator = 0.0;
-	double currentTime = std::chrono::high_resolution_clock::now().time_since_epoch().count();
+	double currentTime = this->theGame->gameTime.ns();
 
 	// no point checking for this->run here, since we will exit out if its false first thing.
 	while(this->run)
 	{
-		double newTime = std::chrono::high_resolution_clock::now().time_since_epoch().count();
+		double newTime = this->theGame->gameTime.ns();
 		double frameTime = newTime - currentTime;
 		currentTime = newTime;
 
 		accumulator += frameTime;
 
-		while(this->run && accumulator >= fixedDeltaTimeMs)
+		while(this->run && accumulator >= fixedDeltaTimeNs)
 		{
-			accumulator -= fixedDeltaTimeMs;
-			Game::Update((float) fixedDeltaTimeMs);
+			this->theGame->Update((float) fixedDeltaTimeNs);
+			accumulator -= fixedDeltaTimeNs;
 		}
+
+		printf("spent %f ms on this frame", frameTime);
 	}
 }
 
 void Controller::RenderLoop()
 {
-	while(this->run && this->CheckSDLEventQueue(4))
+	double fps = 0.0;
+	while(this->run && this->CheckSDLEventQueue())
 	{
+		double begin = this->theGame->gameTime.ns();
 		this->renderer->Clear();
 		this->renderer->SetColour(Util::Colour::black());
 
-
-		Game::Render(this->renderer);
+		usleep(40000);
+		this->theGame->Render(this->renderer);
 		this->renderer->Flush();
+
+		double end = this->theGame->gameTime.ns();
+		double frameTime = end - begin;
+
+		// frames per second is (1sec to ns) / 'frametime' (in ns)
+		fps = S_TO_NS(1.0) / frameTime;
+		fprintf(stderr, "spent %.3f µs on this frame, fps: %.2f                        \r", NS_TO_US(frameTime), fps);
 	}
 }
 
@@ -103,7 +109,7 @@ void Controller::RenderLoop()
 void Controller::StartGame()
 {
 	// init the game state first
-	Game::Start(this);
+	this->theGame = new Game::Game(this);
 
 	// curiously, SDL's event processing *must* be done on the main thread
 	// therefore start the gameloop in a separate thread

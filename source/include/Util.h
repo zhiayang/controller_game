@@ -57,3 +57,36 @@ namespace Logging
 #define LOG(fmt, ...)			Logging::GetGlobalLoggerInstance()->Info(fmt, ##__VA_ARGS__)
 #define WARN(fmt, ...)			Logging::GetGlobalLoggerInstance()->Warn(fmt, ##__VA_ARGS__)
 #define ERROR(fmt, ...)			Logging::GetGlobalLoggerInstance()->Error(fmt, ##__VA_ARGS__)
+
+
+
+
+
+
+
+#define NS_TO_US(x)				((x) / 1000)
+#define NS_TO_MS(x)				(NS_TO_US(x) / 1000)
+#define NS_TO_S(x)				(NS_TO_MS(x) / 1000)
+
+#define US_TO_NS(x)				((x) * 1000)
+#define MS_TO_NS(x)				(US_TO_NS(x) * 1000)
+#define S_TO_NS(x)				(MS_TO_NS(x) * 1000)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
