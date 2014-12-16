@@ -39,6 +39,15 @@ bool Controller::CheckSDLEventQueue(int max)
 				case SDL_QUIT:
 					this->Cleanup();
 					return false;
+
+				// special handling for command-q
+				case SDL_KEYDOWN:
+					if(event.key.keysym.sym == SDLK_q && (SDLK_LGUI || SDLK_RGUI))
+					{
+						this->Cleanup();
+						return false;
+					}
+					break;
 			}
 		}
 	}
