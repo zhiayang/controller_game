@@ -46,6 +46,8 @@ namespace Game
 
 		x++;
 		x = x % 4;
+
+		this->currentScene->Render(r);
 	}
 
 	void Game::Update(float dt)
