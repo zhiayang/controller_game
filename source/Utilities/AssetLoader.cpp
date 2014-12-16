@@ -27,7 +27,7 @@ namespace AssetLoader
 		// read the file.
 		FILE* file = fopen(ass->path.c_str(), "r");
 		if(file == nullptr)
-			ERROR("Failed to read asset '%s'", ass->path.c_str());
+			ERROR("Failed to read asset '%s' (fopen returned null)", ass->path.c_str());
 
 		struct stat s;
 		fstat(fileno(file), &s);
@@ -53,6 +53,7 @@ namespace AssetLoader
 		if(ext == "png")	ass->type = AssetType::ImagePNG;
 		else				ass->type = AssetType::Unknown;
 
+		LOG("Loaded asset '%s'", ass->path.c_str());
 		return ass;
 	}
 

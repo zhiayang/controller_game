@@ -49,7 +49,9 @@ bool Controller::CheckSDLEventQueue()
 	return true;
 }
 
-static const double fixedDeltaTimeNs = 50.0 * 1000.0 * 1000.0;
+static const double fixedDeltaTimeNs	= 50.0 * 1000.0 * 1000.0;
+static const double targetFramerate		= 60.0;
+static const double targetFrameTimeNs	= S_TO_NS(1.0) / targetFramerate;
 void Controller::UpdateLoop()
 {
 	using namespace std::chrono;
@@ -78,21 +80,34 @@ void Controller::UpdateLoop()
 
 void Controller::RenderLoop()
 {
-	double fps = 0.0;
+	double frameTime = 16666666.67;
 	while(this->run && this->CheckSDLEventQueue())
 	{
 		double begin = this->theGame->gameTime.ns();
 		this->renderer->Clear();
 
-		usleep(960000);
 		this->theGame->Render(this->renderer);
 		this->renderer->Flush();
 
 		double end = this->theGame->gameTime.ns();
-		double frameTime = end - begin;
+		frameTime = end - begin;
+
+		// don't kill the CPU
+		{
+			double toWait = targetFrameTimeNs - frameTime;
+			if(toWait > 0)
+			{
+				usleep(NS_TO_US(toWait));
+			}
+			else
+			{
+				// todo: we missed our framerate.
+			}
+		}
+
 
 		// frames per second is (1sec to ns) / 'frametime' (in ns)
-		fps = S_TO_NS(1.0) / frameTime;
+		double fps = S_TO_NS(1.0) / frameTime;
 		fprintf(stderr, "\r                                            \rspent %.3f µs on this frame, fps: %.2f", NS_TO_US(frameTime), fps);
 	}
 }

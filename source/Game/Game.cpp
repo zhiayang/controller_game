@@ -3,9 +3,16 @@
 // Licensed under the Apache License Version 2.0.
 
 #include "Game.h"
+
+using AssetLoader::Asset;
 namespace Game
 {
-	bool x = false;
+	int x = 0;
+	SDL::Texture* one;
+	SDL::Texture* two;
+	SDL::Texture* three;
+	SDL::Texture* four;
+
 	Game::Game(Controller* c)
 	{
 		this->controller = c;
@@ -14,15 +21,31 @@ namespace Game
 
 	void Game::Render(SDL::Renderer* r)
 	{
-		x = !x;
-		Math::Rectangle c;
-		c = Math::Rectangle(0, 0, 200, 300);
+		// x = !x;
 
-		if(x)	r->SetColour(Util::Colour::blue());
-		else	r->SetColour(Util::Colour::red());
+		// Math::Rectangle c;
+		// c = Math::Rectangle(0, 0, 200, 300);
 
-		r->RenderRect(c);
-		// this->currentScene->Render(r);
+		// if(x)	r->SetColour(Util::Colour::blue());
+		// else	r->SetColour(Util::Colour::red());
+
+		// r->RenderRect(c);
+
+		if(!one)
+		{
+			one = new SDL::Texture("1.png", r);
+			two = new SDL::Texture("2.png", r);
+			three = new SDL::Texture("3.png", r);
+			four = new SDL::Texture("4.png", r);
+		}
+
+		if(x == 0)		r->Render(one, 100, 100);
+		else if(x == 1)	r->Render(two, 100, 100);
+		else if(x == 2)	r->Render(three, 100, 100);
+		else			r->Render(four, 100, 100);
+
+		x++;
+		x = x % 4;
 	}
 
 	void Game::Update(float dt)

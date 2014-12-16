@@ -68,10 +68,9 @@ namespace Logging
 #define NS_TO_MS(x)				(NS_TO_US(x) / 1000)
 #define NS_TO_S(x)				(NS_TO_MS(x) / 1000)
 
-#define US_TO_NS(x)				((x) * 1000)
-#define MS_TO_NS(x)				(US_TO_NS(x) * 1000)
-#define S_TO_NS(x)				(MS_TO_NS(x) * 1000)
-
+#define S_TO_MS(x)				((x) * 1000)
+#define S_TO_US(x)				(S_TO_MS(x) * 1000)
+#define S_TO_NS(x)				(S_TO_US(x) * 1000)
 
 
 

@@ -11,6 +11,7 @@
 namespace Game { struct Game; }
 class Controller
 {
+	friend struct Game::Game;
 	public:
 		Controller();
 
