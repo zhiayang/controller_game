@@ -61,7 +61,7 @@ namespace SDL
 		void Render(Texture* text, Math::Rectangle dest);
 		void Render(Texture* text, Math::Rectangle src, Math::Rectangle dest);
 
-		void SetColour(Util::Colour c) { this->drawColour = c; }
+		void SetColour(Util::Colour c);
 		Util::Colour GetColour() { return this->drawColour; }
 
 		SDL_Renderer* sdlRenderer;

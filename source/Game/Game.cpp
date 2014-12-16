@@ -5,6 +5,7 @@
 #include "Game.h"
 namespace Game
 {
+	bool x = false;
 	Game::Game(Controller* c)
 	{
 		this->controller = c;
@@ -13,7 +14,15 @@ namespace Game
 
 	void Game::Render(SDL::Renderer* r)
 	{
-		this->currentScene->Render(r);
+		x = !x;
+		Math::Rectangle c;
+		c = Math::Rectangle(0, 0, 200, 300);
+
+		if(x)	r->SetColour(Util::Colour::blue());
+		else	r->SetColour(Util::Colour::red());
+
+		r->RenderRect(c);
+		// this->currentScene->Render(r);
 	}
 
 	void Game::Update(float dt)

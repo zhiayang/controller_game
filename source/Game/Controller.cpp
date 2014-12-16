@@ -73,8 +73,6 @@ void Controller::UpdateLoop()
 			this->theGame->Update((float) fixedDeltaTimeNs);
 			accumulator -= fixedDeltaTimeNs;
 		}
-
-		printf("spent %f ms on this frame", frameTime);
 	}
 }
 
@@ -85,9 +83,8 @@ void Controller::RenderLoop()
 	{
 		double begin = this->theGame->gameTime.ns();
 		this->renderer->Clear();
-		this->renderer->SetColour(Util::Colour::black());
 
-		usleep(40000);
+		usleep(960000);
 		this->theGame->Render(this->renderer);
 		this->renderer->Flush();
 
@@ -96,7 +93,7 @@ void Controller::RenderLoop()
 
 		// frames per second is (1sec to ns) / 'frametime' (in ns)
 		fps = S_TO_NS(1.0) / frameTime;
-		fprintf(stderr, "spent %.3f µs on this frame, fps: %.2f                        \r", NS_TO_US(frameTime), fps);
+		fprintf(stderr, "\r                                            \rspent %.3f µs on this frame, fps: %.2f", NS_TO_US(frameTime), fps);
 	}
 }
 

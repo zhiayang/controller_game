@@ -9,8 +9,8 @@ namespace SDL
 {
 	void Renderer::Clear()
 	{
+		this->SetColour(Util::Colour::black());
 		SDL_RenderClear(this->sdlRenderer);
-		SDL_SetRenderDrawColor(this->sdlRenderer, 0, 0, 0, 0xFF);
 	}
 
 	void Renderer::Flush()
@@ -155,6 +155,11 @@ namespace SDL
 	}
 
 
+	void Renderer::SetColour(Util::Colour c)
+	{
+		SDL_SetRenderDrawColor(this->sdlRenderer, c.r, c.g, c.b, c.a);
+		this->drawColour = c;
+	}
 }
 
 

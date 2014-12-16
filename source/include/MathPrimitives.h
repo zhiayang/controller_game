@@ -42,6 +42,9 @@ namespace Math
 
 	struct Rectangle
 	{
+		Rectangle() : origin(0, 0), width(0), height(0) { }
+		Rectangle(int32_t x, int32_t y, uint32_t w, uint32_t h) : origin(x, y), width(w), height(h) { }
+
 		Vector2 origin;
 		uint32_t width;
 		uint32_t height;
