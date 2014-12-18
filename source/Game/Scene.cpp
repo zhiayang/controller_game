@@ -11,11 +11,11 @@ namespace Game
 
 	void Scene::Render(SDL::Renderer* r)
 	{
-		this->Object::Render(r);
+		this->Entity::Render(r);
 	}
 
 	void Scene::Update(float dt)
 	{
-		this->Object::Update(dt);
+		this->Entity::Update(dt);
 	}
 }

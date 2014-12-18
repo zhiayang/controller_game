@@ -38,11 +38,15 @@ bool Controller::CheckSDLEventQueue()
 
 			// special handling for command-q
 			case SDL_KEYDOWN:
-				if(event.key.keysym.sym == SDLK_q && (SDLK_LGUI || SDLK_RGUI))
+			case SDL_KEYUP:
+				Input::HandleInput(&this->inputState, &event);
+				if((this->inputState.isKeyDown(Input::Keys::SuperL) || this->inputState.isKeyDown(Input::Keys::SuperR))
+					&& this->inputState.isKeyDown(Input::Keys::Q))
 				{
 					this->Cleanup();
 					return false;
 				}
+
 				break;
 		}
 	}
@@ -72,7 +76,7 @@ void Controller::UpdateLoop()
 
 		while(this->run && accumulator >= fixedDeltaTimeNs)
 		{
-			this->theGame->Update((float) fixedDeltaTimeNs);
+			this->theGame->Update((float) NS_TO_S(fixedDeltaTimeNs));
 			accumulator -= fixedDeltaTimeNs;
 		}
 	}
@@ -107,8 +111,8 @@ void Controller::RenderLoop()
 
 
 		// frames per second is (1sec to ns) / 'frametime' (in ns)
-		double fps = S_TO_NS(1.0) / frameTime;
-		fprintf(stderr, "\r                                            \rspent %.3f µs on this frame, fps: %.2f", NS_TO_US(frameTime), fps);
+		// double fps = S_TO_NS(1.0) / frameTime;
+		// fprintf(stderr, "\r                                            \rspent %.3f µs on this frame, fps: %.2f", NS_TO_US(frameTime), fps);
 	}
 }
 

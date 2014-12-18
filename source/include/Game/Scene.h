@@ -5,11 +5,11 @@
 #pragma once
 
 #include <vector>
-#include "Object.h"
+#include "Entity.h"
 
 namespace Game
 {
-	struct Scene : Object
+	struct Scene : Entity
 	{
 		~Scene();
 		virtual void Render(SDL::Renderer* r) override;

@@ -3,14 +3,16 @@
 // Licensed under the Apache License Version 2.0.
 
 #pragma once
-#include "Object.h"
+#include "Entity.h"
 
 namespace Game
 {
-	struct Aircraft : Object
+	struct Aircraft : MovingEntity
 	{
-		Aircraft(Object* p) : Object(p) { }
+		Aircraft(Entity* p) : MovingEntity(p) { }
 		~Aircraft();
+
+		void Randomise();
 
 		virtual void Render(SDL::Renderer* r) override;
 		virtual void Update(float dt) override;

@@ -29,18 +29,41 @@ namespace Math
 		return Vector3(this->x - other.x, this->y - other.y, this->z - other.z);
 	}
 
+	Vector3 Vector3::operator*(double sc)
+	{
+		return Vector3(this->x * sc, this->y * sc, this->z * sc);
+	}
+
+	Vector3 Vector3::operator*(int64_t sc)
+	{
+		return Vector3(this->x * sc, this->y * sc, this->z * sc);
+	}
+
 	Vector3 Vector3::operator+=(Vector3 other)
 	{
-		this->x += other.x;
-		this->y += other.y;
-		this->z += other.z;
+		*this = *this + other;
+		return *this;
+	}
 
+	Vector3 Vector3::operator*=(double scalar)
+	{
+		*this = *this * scalar;
+		return *this;
+	}
+
+	Vector3 Vector3::operator*=(int64_t scalar)
+	{
+		*this = *this * scalar;
 		return *this;
 	}
 
 	bool Vector3::operator==(Vector3 other)
 	{
-		return (this->x == other.x) && (this->y == other.y) && (this->z == other.z);
+		double xdiff = fabs(this->x - other.x);
+		double ydiff = fabs(this->y - other.y);
+		double zdiff = fabs(this->z - other.z);
+
+		return (xdiff <= 0.000001) && (ydiff <= 0.000001) && (zdiff <= 0.000001);
 	}
 
 
@@ -55,11 +78,33 @@ namespace Math
 		return Vector2(this->x - other.x, this->y - other.y);
 	}
 
+	Vector2 Vector2::operator*(double sc)
+	{
+		return Vector2(this->x * sc, this->y * sc);
+	}
+
+	Vector2 Vector2::operator*(int64_t sc)
+	{
+		return Vector2(this->x * sc, this->y * sc);
+	}
+
 	Vector2 Vector2::operator+=(Vector2 other)
 	{
 		this->x += other.x;
 		this->y += other.y;
 
+		return *this;
+	}
+
+	Vector2 Vector2::operator*=(double scalar)
+	{
+		*this = *this * scalar;
+		return *this;
+	}
+
+	Vector2 Vector2::operator*=(int64_t scalar)
+	{
+		*this = *this * scalar;
 		return *this;
 	}
 

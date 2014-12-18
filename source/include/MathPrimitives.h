@@ -19,6 +19,10 @@ namespace Math
 		Vector2 operator+(Vector2 other);
 		Vector2 operator-(Vector2 other);
 		Vector2 operator+=(Vector2 other);
+		Vector2 operator*=(int64_t scalar);
+		Vector2 operator*=(double scalar);
+		Vector2 operator*(double scalar);
+		Vector2 operator*(int64_t scalar);
 		bool operator==(Vector2 other);
 
 		static Vector2 zero() { return Vector2(0, 0); }
@@ -27,13 +31,19 @@ namespace Math
 	struct Vector3
 	{
 		Vector3() : x(0), y(0), z(0) { }
+		Vector3(double x, double y, double z) : x(x), y(y), z(z) { }
 		Vector3(int32_t x, int32_t y, int32_t z) : x(x), y(y), z(z) { }
-		int32_t x;
-		int32_t y;
-		int32_t z;
+
+		double x;
+		double y;
+		double z;
 
 		Vector3 operator+(Vector3 other);
 		Vector3 operator-(Vector3 other);
+		Vector3 operator*(double scalar);
+		Vector3 operator*(int64_t scalar);
+		Vector3 operator*=(double scalar);
+		Vector3 operator*=(int64_t scalar);
 		Vector3 operator+=(Vector3 other);
 		bool operator==(Vector3 other);
 

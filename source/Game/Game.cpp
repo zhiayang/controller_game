@@ -17,6 +17,10 @@ namespace Game
 	{
 		this->controller = c;
 		this->currentScene = new Scene();
+
+		Aircraft* a = new Aircraft(this->currentScene);
+		a->Randomise();
+		this->currentScene->addChild(a);
 	}
 
 	void Game::Render(SDL::Renderer* r)
@@ -31,21 +35,21 @@ namespace Game
 
 		// r->RenderRect(c);
 
-		if(!one)
-		{
-			one = new SDL::Texture("1.png", r);
-			two = new SDL::Texture("2.png", r);
-			three = new SDL::Texture("3.png", r);
-			four = new SDL::Texture("4.png", r);
-		}
+		// if(!one)
+		// {
+		// 	one = new SDL::Texture("1.png", r);
+		// 	two = new SDL::Texture("2.png", r);
+		// 	three = new SDL::Texture("3.png", r);
+		// 	four = new SDL::Texture("4.png", r);
+		// }
 
-		if(x == 0)		r->Render(one, 100, 100);
-		else if(x == 1)	r->Render(two, 100, 100);
-		else if(x == 2)	r->Render(three, 100, 100);
-		else			r->Render(four, 100, 100);
+		// if(x == 0)		r->Render(one, 100, 100);
+		// else if(x == 1)	r->Render(two, 100, 100);
+		// else if(x == 2)	r->Render(three, 100, 100);
+		// else			r->Render(four, 100, 100);
 
-		x++;
-		x = x % 4;
+		// x++;
+		// x = x % 4;
 
 		this->currentScene->Render(r);
 	}

@@ -7,6 +7,7 @@
 #include "Util.h"
 #include <thread>
 #include "SDLWrapper.h"
+#include "InputManager.h"
 
 namespace Game { struct Game; }
 class Controller
@@ -26,6 +27,7 @@ class Controller
 		Controller* instance() { return this; }
 
 	private:
+		Input::State	inputState;
 		SDL::Window*	window;
 		SDL::Renderer*	renderer;
 		bool			run;
