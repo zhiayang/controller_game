@@ -39,6 +39,7 @@ bool Controller::CheckSDLEventQueue()
 			// special handling for command-q
 			case SDL_KEYDOWN:
 			case SDL_KEYUP:
+				// set the boolean flags. this is useful for polling
 				Input::HandleInput(&this->inputState, &event);
 				if((this->inputState.isKeyDown(Input::Keys::SuperL) || this->inputState.isKeyDown(Input::Keys::SuperR))
 					&& this->inputState.isKeyDown(Input::Keys::Q))
@@ -47,6 +48,8 @@ bool Controller::CheckSDLEventQueue()
 					return false;
 				}
 
+				// TODO: delegate callbacks for keys maybe?
+				// Investigate usefulness vs need.
 				break;
 		}
 	}
