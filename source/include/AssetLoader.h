@@ -23,6 +23,7 @@ namespace AssetLoader
 		SDL_RWops* sdlrw;
 	};
 
+	std::string getResourcePath();
 	Asset* Load(const char* path);
 	void Unload(Asset* asset);
 }

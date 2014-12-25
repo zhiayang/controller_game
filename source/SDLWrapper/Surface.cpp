@@ -5,7 +5,7 @@
 #include "SDLWrapper.h"
 namespace SDL
 {
-	Surface::Surface(const char* path) : Surface(AssetLoader::Load(path))
+	Surface::Surface(std::string path) : Surface(AssetLoader::Load(path.c_str()))
 	{
 	}
 
@@ -30,10 +30,22 @@ namespace SDL
 		}
 	}
 
+	Surface::Surface(Font* font, std::string txt, Util::Colour c)
+	{
+		// create a surface
+		// kinda cheaty with the SDL colour cast.
+		this->sdlSurf = TTF_RenderText_Blended(font->ttfFont, txt.c_str(), *((SDL_Color*) c.toSDL()));
+		if(!this->sdlSurf) ERROR("Failed to create surface");
+
+		this->asset = 0;
+	}
+
 	Surface::~Surface()
 	{
 		SDL_FreeSurface(this->sdlSurf);
-		AssetLoader::Unload(this->asset);
+
+		if(this->asset)
+			AssetLoader::Unload(this->asset);
 	}
 
 }

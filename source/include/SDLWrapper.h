@@ -9,17 +9,19 @@
 #include <assert.h>
 #include <SDL2/SDL.h>
 #include "AssetLoader.h"
+#include <SDL2/SDL_ttf.h>
 #include <SDL2/SDL_image.h>
 
 namespace SDL
 {
 	struct Texture;
+	struct Font;
 
 	struct Window
 	{
-		Window(const char* title, int w, int h) : width(w), height(h)
+		Window(std::string title, int w, int h) : width(w), height(h)
 		{
-			this->sdlWin = SDL_CreateWindow(title, 100, 100, w, h, SDL_WINDOW_SHOWN);
+			this->sdlWin = SDL_CreateWindow(title.c_str(), 100, 100, w, h, SDL_WINDOW_SHOWN);
 			if(!this->sdlWin) ERROR("Failed to initialise SDL Window! (%dx%d)", w, h);
 
 			LOG("Created new SDL Window with dimensions %dx%d", this->width, this->height);
@@ -61,6 +63,9 @@ namespace SDL
 		void Render(Texture* text, Math::Rectangle dest);
 		void Render(Texture* text, Math::Rectangle src, Math::Rectangle dest);
 
+		// text
+		void Render(std::string txt, Font* font, Math::Vector2 pt);
+
 		void SetColour(Util::Colour c);
 		Util::Colour GetColour() { return this->drawColour; }
 
@@ -71,8 +76,9 @@ namespace SDL
 
 	struct Surface
 	{
-		Surface(const char* path);
+		Surface(std::string path);
 		Surface(AssetLoader::Asset* ass);
+		Surface(Font* font, std::string txt, Util::Colour c);
 		~Surface();
 
 		SDL_Surface* sdlSurf;
@@ -81,7 +87,7 @@ namespace SDL
 
 	struct Texture
 	{
-		Texture(const char* path, Renderer* rend);
+		Texture(std::string path, Renderer* rend);
 		Texture(AssetLoader::Asset* ass, Renderer* rend);
 		Texture(Surface* surf, Renderer* rend);
 		~Texture();
@@ -90,7 +96,24 @@ namespace SDL
 		Surface* surf;
 	};
 
+	struct Font
+	{
+		Font(std::string path, int fontSize, bool hint = true)
+		{
+			this->ttfFont = TTF_OpenFont(path.c_str(), fontSize);
+			TTF_SetFontHinting(this->ttfFont, hint ? TTF_HINTING_NORMAL : TTF_HINTING_MONO);
+			if(!this->ttfFont)
+				ERROR("Failed to open TTF Font '%s'", path.c_str());
+		}
 
+		~Font()
+		{
+			if(this->ttfFont)
+				TTF_CloseFont(this->ttfFont);
+		}
+
+		TTF_Font* ttfFont;
+	};
 
 
 

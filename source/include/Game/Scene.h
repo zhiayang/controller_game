@@ -4,15 +4,28 @@
 
 #pragma once
 
+#include <deque>
 #include <vector>
-#include "Entity.h"
+#include "Game/Entity.h"
+#include "Game/Aircraft.h"
 
 namespace Game
 {
 	struct Scene : Entity
 	{
-		~Scene();
+		virtual ~Scene();
 		virtual void Render(SDL::Renderer* r) override;
 		virtual void Update(float dt) override;
+	};
+
+	struct FlightScene : Scene
+	{
+		virtual void Render(SDL::Renderer* r) override;
+		virtual void Update(float dt) override;
+
+		void SpawnRandomCraft();
+
+		private:
+			std::deque<Aircraft*> crafts;
 	};
 }

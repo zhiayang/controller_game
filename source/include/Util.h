@@ -3,9 +3,15 @@
 // Licensed under the Apache License Version 2.0.
 
 #pragma once
+#include <random>
 #include <stdint.h>
 #include <stdlib.h>
 #include <algorithm>
+
+namespace SDL
+{
+	struct Font;
+}
 
 namespace Util
 {
@@ -27,6 +33,11 @@ namespace Util
 				std::max(this->b + other.b, 0xFF), std::max(this->a + other.a, 0xFF));
 		}
 
+		void* toSDL()
+		{
+			return (void*) this;
+		}
+
 		static Colour black() { return Colour(0, 0, 0); }
 		static Colour white() { return Colour(0xFF, 0xFF, 0xFF); }
 
@@ -37,6 +48,20 @@ namespace Util
 		static Colour yellow() { return Colour::red() + Colour::green(); }
 		static Colour magenta() { return Colour::blue() + Colour::red(); }
 	};
+
+
+	namespace Random
+	{
+		double get(double scale = 1);
+		double get(double lower, double upper);
+		void cycle();
+	};
+
+	namespace Font
+	{
+		SDL::Font* get(std::string name, int size, bool hinting = true);
+		void closeAll();
+	}
 }
 
 template<class T>

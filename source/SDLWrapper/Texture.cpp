@@ -5,7 +5,7 @@
 #include "SDLWrapper.h"
 namespace SDL
 {
-	Texture::Texture(const char* path, Renderer* r) : Texture(AssetLoader::Load(path), r)
+	Texture::Texture(std::string path, Renderer* r) : Texture(AssetLoader::Load(path.c_str()), r)
 	{
 
 	}
@@ -27,7 +27,7 @@ namespace SDL
 
 	Texture::~Texture()
 	{
-		delete this->surf;
 		SDL_DestroyTexture(this->sdlTexture);
+		delete this->surf;
 	}
 }

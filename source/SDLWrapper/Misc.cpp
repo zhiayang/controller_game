@@ -23,6 +23,8 @@ namespace SDL
 		// init SDL_Image
 		if(IMG_Init(IMG_INIT_PNG) != IMG_INIT_PNG)
 			ERROR("Failed to initialise SDL2_image library");
+
+		TTF_Init();
 	}
 
 }

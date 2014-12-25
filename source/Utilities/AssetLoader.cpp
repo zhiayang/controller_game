@@ -63,6 +63,11 @@ namespace AssetLoader
 		delete ass->raw;
 		delete ass;
 	}
+
+	std::string getResourcePath()
+	{
+		return "../assets/";
+	}
 }
 
 

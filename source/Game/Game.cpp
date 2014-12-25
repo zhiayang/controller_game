@@ -16,11 +16,7 @@ namespace Game
 	Game::Game(Controller* c)
 	{
 		this->controller = c;
-		this->currentScene = new Scene();
-
-		Aircraft* a = new Aircraft(this->currentScene);
-		a->Randomise();
-		this->currentScene->addChild(a);
+		this->currentScene = new FlightScene();
 	}
 
 	void Game::Render(SDL::Renderer* r)

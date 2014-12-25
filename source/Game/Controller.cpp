@@ -13,7 +13,7 @@
 Controller::Controller()
 {
 	this->run = true;
-	this->window = new SDL::Window("Controller", 800, 600);
+	this->window = new SDL::Window("Controller", 1024, 640);
 	this->renderer = new SDL::Renderer(this->window, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
 }
 
@@ -21,6 +21,7 @@ void Controller::Cleanup()
 {
 	this->run = false;
 
+	Util::Font::closeAll();
 	delete this->window;
 	delete this->renderer;
 }
@@ -56,7 +57,7 @@ bool Controller::CheckSDLEventQueue()
 	return true;
 }
 
-static const double fixedDeltaTimeNs	= 50.0 * 1000.0 * 1000.0;
+static const double fixedDeltaTimeNs	= 20.0 * 1000.0 * 1000.0;
 static const double targetFramerate		= 60.0;
 static const double targetFrameTimeNs	= S_TO_NS(1.0) / targetFramerate;
 void Controller::UpdateLoop()

@@ -142,7 +142,6 @@ namespace SDL
 	void Renderer::Render(Texture* text, Math::Rectangle dest)
 	{
 		SDL_Rect d = Math::ToSDL(dest);
-
 		SDL_RenderCopy(this->sdlRenderer, text->sdlTexture, 0, &d);
 	}
 
@@ -154,9 +153,18 @@ namespace SDL
 		SDL_RenderCopy(this->sdlRenderer, text->sdlTexture, &s, &d);
 	}
 
+	void Renderer::Render(std::string txt, SDL::Font* font, Math::Vector2 pt)
+	{
+		SDL::Surface* surface = new SDL::Surface(font, txt, this->drawColour);
+		SDL::Texture* texture = new SDL::Texture(surface, this);
+
+		this->Render(texture, pt);
+		delete texture;				// this deletes surface as well.
+	}
 
 	void Renderer::SetColour(Util::Colour c)
 	{
+		SDL_SetRenderDrawBlendMode(this->sdlRenderer, SDL_BLENDMODE_BLEND);
 		SDL_SetRenderDrawColor(this->sdlRenderer, c.r, c.g, c.b, c.a);
 		this->drawColour = c;
 	}
