@@ -15,38 +15,15 @@ namespace Game
 		Entity(Entity* p) : parent(p) { }
 
 		virtual ~Entity() { }
-		virtual void Render(SDL::Renderer* r) { for(auto o : this->objects) o->Render(r); }
-		virtual void Update(float deltaTime) { for(auto o : this->objects) o->Update(deltaTime); }
 
-		virtual void addChild(Entity* o) { this->objects.push_back(o); }
-		virtual void removeChild(Entity* o)
-		{
-			for(auto i = this->objects.begin(); i != this->objects.end(); i++)
-			{
-				if(*i == o)
-				{
-					this->objects.erase(i);
-					return;
-				}
-			}
-
-			assert(0);
-		}
-
-		virtual Math::Vector3 pos() final
-		{
-			// non-overridable -- uses the transform of parents plus the transform of self to move.
-			if(this->parent)
-				return this->_pos + this->parent->pos();
-
-			else
-				return this->_pos;
-		}
-
-		virtual void pos(Math::Vector3 v3) final
-		{
-			this->_pos = v3;
-		}
+		// TODO: somehow NULLs end up in the objects list...?
+		// Investigate.
+		virtual void Render(SDL::Renderer* r);
+		virtual void Update(float deltaTime);
+		virtual void addChild(Entity* o);
+		virtual void removeChild(Entity* o);
+		virtual Math::Vector3 pos() final;
+		virtual void pos(Math::Vector3 v3) final;
 
 		std::vector<Entity*> objects;
 		Entity* parent = 0;

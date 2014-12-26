@@ -13,11 +13,10 @@ namespace Game
 		Aircraft(Entity* p) : MovingEntity(p) { }
 		~Aircraft();
 
-		void Randomise();
-
 		virtual void Render(SDL::Renderer* r) override;
 		virtual void Update(float dt) override;
 
 		std::string callsign;
+		Util::Colour colour;
 	};
 }

@@ -153,7 +153,7 @@ namespace SDL
 		SDL_RenderCopy(this->sdlRenderer, text->sdlTexture, &s, &d);
 	}
 
-	void Renderer::Render(std::string txt, SDL::Font* font, Math::Vector2 pt)
+	void Renderer::RenderText(std::string txt, SDL::Font* font, Math::Vector2 pt)
 	{
 		SDL::Surface* surface = new SDL::Surface(font, txt, this->drawColour);
 		SDL::Texture* texture = new SDL::Texture(surface, this);

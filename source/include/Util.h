@@ -15,6 +15,13 @@ namespace SDL
 
 namespace Util
 {
+	namespace Random
+	{
+		double get(double scale = 1);
+		double get(double lower, double upper);
+		void cycle();
+	};
+
 	struct Colour
 	{
 		Colour(uint8_t red, uint8_t green, uint8_t blue, uint8_t alpha) : r(red), g(green), b(blue), a(alpha) { }
@@ -47,15 +54,10 @@ namespace Util
 		static Colour cyan() { return Colour::green() + Colour::blue(); }
 		static Colour yellow() { return Colour::red() + Colour::green(); }
 		static Colour magenta() { return Colour::blue() + Colour::red(); }
+		static Colour random() { return Colour((uint8_t) Util::Random::get(0, 255), (uint8_t) Util::Random::get(0, 255), (uint8_t) Util::Random::get(0, 255)); }
 	};
 
 
-	namespace Random
-	{
-		double get(double scale = 1);
-		double get(double lower, double upper);
-		void cycle();
-	};
 
 	namespace Font
 	{

@@ -5,20 +5,26 @@
 #include "Game.h"
 #include <thread>
 #include <chrono>
+#include "Config.h"
 #include <unistd.h>
 #include <SDL2/SDL.h>
 #include "Resources.h"
 #include "Controller.h"
 
+#define DRAWFPS		1
+
 Controller::Controller()
 {
 	this->run = true;
-	this->window = new SDL::Window("Controller", 1024, 640);
+	this->window = new SDL::Window("Controller", Config::GetResX(), Config::GetResY());
 	this->renderer = new SDL::Renderer(this->window, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
+
+	this->debugFont = Util::Font::get("pixel", 8, false);
 }
 
 void Controller::Cleanup()
 {
+	LOG("SDL Sent QUIT message.");
 	this->run = false;
 
 	Util::Font::closeAll();
@@ -95,6 +101,29 @@ void Controller::RenderLoop()
 		this->renderer->Clear();
 
 		this->theGame->Render(this->renderer);
+
+
+
+
+
+		// frames per second is (1sec to ns) / 'frametime' (in ns)
+		double fps = S_TO_NS(1.0) / frameTime;
+		if(DRAWFPS)
+		{
+			this->renderer->RenderText(std::string("FPS: ") + (fps > 60 ? "> 60" : std::to_string((int) fps)), this->debugFont, Math::Vector2(10, 10));
+		}
+
+
+
+
+
+
+
+
+
+
+
+
 		this->renderer->Flush();
 
 		double end = this->theGame->gameTime.ns();
@@ -113,10 +142,6 @@ void Controller::RenderLoop()
 			}
 		}
 
-
-		// frames per second is (1sec to ns) / 'frametime' (in ns)
-		// double fps = S_TO_NS(1.0) / frameTime;
-		// fprintf(stderr, "\r                                            \rspent %.3f µs on this frame, fps: %.2f", NS_TO_US(frameTime), fps);
 	}
 }
 

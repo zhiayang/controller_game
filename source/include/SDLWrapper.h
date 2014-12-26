@@ -64,7 +64,7 @@ namespace SDL
 		void Render(Texture* text, Math::Rectangle src, Math::Rectangle dest);
 
 		// text
-		void Render(std::string txt, Font* font, Math::Vector2 pt);
+		void RenderText(std::string txt, Font* font, Math::Vector2 pt);
 
 		void SetColour(Util::Colour c);
 		Util::Colour GetColour() { return this->drawColour; }

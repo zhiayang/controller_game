@@ -33,4 +33,5 @@ class Controller
 		bool			run;
 		Game::Game*		theGame;
 		std::thread		updateLoop;
+		SDL::Font*		debugFont;
 };

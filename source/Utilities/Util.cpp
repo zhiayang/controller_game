@@ -40,7 +40,7 @@ namespace Util
 				return fontMap[tup];
 			}
 
-			SDL::Font* f = new SDL::Font(AssetLoader::getResourcePath() + name + ".ttf", size, hinting);
+			SDL::Font* f = new SDL::Font(AssetLoader::getResourcePath() + "fonts/" + name + ".ttf", size, hinting);
 			fontMap[tup] = f;
 
 			return f;
