@@ -1,0 +1,18 @@
+// Command.h
+// Copyright (c) 2014 - The Foreseeable Future, zhiayang@gmail.com
+// Licensed under the Apache License Version 2.0.
+
+#pragma once
+#include <stdint.h>
+namespace Game
+{
+	enum class CommandType
+	{
+		Invalid		= 0,
+	};
+
+	struct Command
+	{
+		CommandType type;
+	};
+}

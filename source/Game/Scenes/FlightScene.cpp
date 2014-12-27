@@ -7,21 +7,25 @@
 
 namespace Game
 {
-	static const uint64_t panelWidth	= 200;
-	static const uint64_t tabWidth		= 170;
-	static const uint64_t tabHeight		= 50;
-	static const uint64_t padding		= 10;
-	static const uint64_t offset		= (panelWidth - tabWidth) / 2;
+	// globals, deal with it.
+	// TODO: move out of here into instance variables, since they're all static anyway
+	static const uint64_t panelWidth		= 200;
+	static const uint64_t tabWidth			= 170;
+	static const uint64_t tabHeight			= 50;
+	static const uint64_t padding			= 10;
+	static const uint64_t cmdPanelHeight	= 30;
+	static const uint64_t offset			= (panelWidth - tabWidth) / 2;
+	static const double SpawnChance			= 0.1;
 
-	static void RandomiseCraft(Aircraft* craft)
+	static void RandomiseCraft(FlightScene* scene, Aircraft* craft)
 	{
 		// randomise velocity
 		double x = Util::Random::get(0.6, 1.0) * (Util::Random::get() > 0 ? 1 : -1);
 		double y = Util::Random::get(0.6, 1.0) * (Util::Random::get() > 0 ? 1 : -1);
-		double z = Util::Random::get(0.6, 1.0) * (Util::Random::get() > 0 ? 1 : -1);
+		double z = 0;
 
 		craft->velocity = Math::Vector3(x, y, z);
-		craft->speed = 50;
+		craft->speed = 100;
 
 		// randomise callsign
 		char letters[3] = { };
@@ -45,14 +49,8 @@ namespace Game
 		{
 			// account for the bar on the left.
 
-
-
-
-
-
-
-			uint64_t rx = Config::GetResX() - panelWidth;
-			uint64_t ry = Config::GetResY();
+			uint64_t rx = Config::GetResX() - scene->GetSidebarWidth();
+			uint64_t ry = Config::GetResY() - scene->GetCmdPanelHeight();
 
 			// limited to the centre 1/3rd of the screen.
 			randxpos = (uint64_t) Util::Random::get(rx / 3, rx - (rx / 3));
@@ -75,7 +73,7 @@ namespace Game
 		// mainly up
 		else if(y < 0 && fabs(y) > fabs(x))
 		{
-			craft->pos(Math::Vector3(randxpos, Config::GetResY(), 0));
+			craft->pos(Math::Vector3(randxpos, scene->GetDisplayAreaHeight(), 0));
 		}
 
 		// mainly left
@@ -94,15 +92,13 @@ namespace Game
 
 
 
-
-	static constexpr double SpawnChance = 0.1;
 	void FlightScene::Render(SDL::Renderer* r)
 	{
 		// render all the crafts first, so the sidebar
 		// will render on top of them.
 		this->Scene::Render(r);
 
-
+		// render the panel.
 		r->SetColour(Util::Colour(150, 150, 150, 100));
 		r->RenderRect(Math::Rectangle(0, 0, panelWidth, Config::GetResY()));
 
@@ -125,10 +121,8 @@ namespace Game
 	void FlightScene::Update(float dt)
 	{
 		double norm = Util::Random::get(0, 1);
-		if(norm > 1.0 - SpawnChance)
-		{
+		if(norm > (1.0 - SpawnChance))
 			this->SpawnRandomCraft();
-		}
 
 		this->Scene::Update(dt);
 	}
@@ -136,9 +130,29 @@ namespace Game
 	void FlightScene::SpawnRandomCraft()
 	{
 		Aircraft* a = new Aircraft(this);
-		RandomiseCraft(a);
+		RandomiseCraft(this, a);
 
 		this->addChild(a);
 		this->crafts.push_back(a);
+	}
+
+	uint64_t FlightScene::GetDisplayAreaWidth()
+	{
+		return Config::GetResX() - panelWidth;
+	}
+
+	uint64_t FlightScene::GetDisplayAreaHeight()
+	{
+		return Config::GetResY() - cmdPanelHeight;
+	}
+
+	uint64_t FlightScene::GetSidebarWidth()
+	{
+		return panelWidth;
+	}
+
+	uint64_t FlightScene::GetCmdPanelHeight()
+	{
+		return cmdPanelHeight;
 	}
 }

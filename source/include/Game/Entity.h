@@ -3,6 +3,8 @@
 // Licensed under the Apache License Version 2.0.
 
 #pragma once
+#include <mutex>
+#include <deque>
 #include <vector>
 #include "SDLWrapper.h"
 #include "MathPrimitives.h"
@@ -25,7 +27,8 @@ namespace Game
 		virtual Math::Vector3 pos() final;
 		virtual void pos(Math::Vector3 v3) final;
 
-		std::vector<Entity*> objects;
+		std::mutex lock;
+		std::deque<Entity*> objects;
 		Entity* parent = 0;
 
 		// pos is private, we only ever want to use the method

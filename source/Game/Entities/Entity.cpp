@@ -22,11 +22,13 @@ namespace Game
 
 	void Entity::removeChild(Entity* child)
 	{
+		this->lock.lock();
 		for(auto i = this->objects.begin(); i != this->objects.end(); i++)
 		{
 			if(*i == child)
 			{
 				this->objects.erase(i);
+				this->lock.unlock();
 				return;
 			}
 		}
@@ -37,7 +39,9 @@ namespace Game
 	void Entity::addChild(Entity* child)
 	{
 		assert(child);
+		this->lock.lock();
 		this->objects.push_back(child);
+		this->lock.unlock();
 	}
 
 	void Entity::Update(float dt)
@@ -45,7 +49,10 @@ namespace Game
 		if(this->objects.size() > 0)
 		{
 			for(auto o : this->objects)
-				if(o) o->Update(dt);
+			{
+				assert(o);
+				o->Update(dt);
+			}
 		}
 	}
 
@@ -54,7 +61,10 @@ namespace Game
 		if(this->objects.size() > 0)
 		{
 			for(auto o : this->objects)
-				if(o) o->Render(r);
+			{
+				assert(o);
+				o->Render(r);
+			}
 		}
 	}
 }

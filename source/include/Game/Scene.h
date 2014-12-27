@@ -24,8 +24,12 @@ namespace Game
 		virtual void Update(float dt) override;
 
 		void SpawnRandomCraft();
+		uint64_t GetDisplayAreaWidth();
+		uint64_t GetDisplayAreaHeight();
+		uint64_t GetSidebarWidth();
+		uint64_t GetCmdPanelHeight();
 
 		private:
-			std::deque<Aircraft*> crafts;
+			std::vector<Aircraft*> crafts;
 	};
 }

@@ -5,12 +5,14 @@
 #pragma once
 #include <string>
 #include "Entity.h"
+#include "Command.h"
+#include "AIComponent.h"
 
 namespace Game
 {
 	struct Aircraft : MovingEntity
 	{
-		Aircraft(Entity* p) : MovingEntity(p) { }
+		Aircraft(Entity* p);
 		~Aircraft();
 
 		virtual void Render(SDL::Renderer* r) override;
@@ -18,5 +20,6 @@ namespace Game
 
 		std::string callsign;
 		Util::Colour colour;
+		PlaneAI ai;
 	};
 }

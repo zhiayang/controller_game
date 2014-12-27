@@ -10,6 +10,11 @@
 
 namespace Game
 {
+	Aircraft::Aircraft(Entity* p) : MovingEntity(p), ai(this)
+	{
+
+	}
+
 	Aircraft::~Aircraft()
 	{
 	}
@@ -20,7 +25,7 @@ namespace Game
 		c.origin = Math::Vector2(this->pos().x, this->pos().y);
 		c.radius = 3;
 
-		r->SetColour(Util::Colour::red());
+		r->SetColour(this->colour);
 		r->RenderCircle(c, true);
 
 		// render our callsign
@@ -34,6 +39,7 @@ namespace Game
 
 	void Aircraft::Update(float dt)
 	{
+		this->ai.UpdateAI(dt);
 		this->MovingEntity::Update(dt);
 	}
 }
