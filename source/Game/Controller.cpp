@@ -20,6 +20,25 @@ Controller::Controller()
 	this->renderer = new SDL::Renderer(this->window, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
 
 	this->debugFont = Util::Font::get("pixel", 8, false);
+
+	SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 2);
+	SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 1);
+
+	this->oglContext = SDL_GL_CreateContext(this->window->sdlWin);
+	SDL_GL_SetSwapInterval(1);
+
+	glMatrixMode(GL_PROJECTION);
+	glLoadIdentity();
+
+	glMatrixMode(GL_MODELVIEW);
+	glLoadIdentity();
+
+	glOrtho(0, Config::GetResX(), Config::GetResY(), 0, 0, 100);
+
+	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+	glEnable(GL_TEXTURE_2D);
+	glEnable(GL_BLEND);
+	glClearColor(0, 0, 0, 1.0);
 }
 
 void Controller::Cleanup()
@@ -110,7 +129,7 @@ void Controller::RenderLoop()
 		double fps = S_TO_NS(1.0) / frameTime;
 		if(DRAWFPS)
 		{
-			this->renderer->RenderText(std::string("FPS: ") + (fps > 60 ? "> 60" : std::to_string((int) fps)), this->debugFont, Math::Vector2(10, 10));
+			this->renderer->RenderText(std::string("FPS: ") + (fps > 60 ? "> 60" : std::to_string((int) fps)), this->debugFont, Math::Vector2(10, 4));
 		}
 
 

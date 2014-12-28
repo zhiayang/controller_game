@@ -25,8 +25,18 @@ namespace Game
 		c.origin = Math::Vector2(this->pos().x, this->pos().y);
 		c.radius = 3;
 
-		r->SetColour(this->colour);
-		r->RenderCircle(c, true);
+		glPushMatrix();
+
+		// r->SetColour(this->colour);
+		// r->RenderCircle(c, true);
+
+		glTranslated(this->pos().x, this->pos().y, 0);
+		glRotated(30, 0, 0, 1);
+		glTranslated(-this->pos().x, -this->pos().y, 0);
+		r->SetColour(Util::Colour::blue());
+		r->RenderEqTriangle(Math::Vector2(this->pos().x, this->pos().y), 100);
+
+		glPopMatrix();
 
 		// render our callsign
 		r->SetColour(Util::Colour::white());

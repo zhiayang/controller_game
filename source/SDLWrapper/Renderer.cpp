@@ -2,6 +2,7 @@
 // Copyright (c) 2014 - The Foreseeable Future, zhiayang@gmail.com
 // Licensed under the Apache License Version 2.0.
 
+#include "GLWrapper.h"
 #include "SDLWrapper.h"
 using namespace Math;
 
@@ -9,8 +10,7 @@ namespace SDL
 {
 	void Renderer::Clear()
 	{
-		this->SetColour(Util::Colour::black());
-		SDL_RenderClear(this->sdlRenderer);
+		glClear(GL_COLOR_BUFFER_BIT);
 	}
 
 	void Renderer::Flush()
@@ -21,7 +21,12 @@ namespace SDL
 
 	void Renderer::RenderPoint(Math::Vector2 pt)
 	{
-		SDL_RenderDrawPoint(this->sdlRenderer, pt.x, pt.y);
+		glBegin(GL_POINTS);
+		this->updateGlColour();
+
+		glVertex2d(pt.x, pt.y);
+
+		glEnd();
 	}
 
 	void Renderer::RenderCircle(Math::Circle circ, bool fill)
@@ -30,6 +35,7 @@ namespace SDL
 		int32_t y = 0;
 		double radiusError = 1.0 - x;
 
+		// who needs trigo?
 		while(x >= y)
 		{
 			auto nxpy = Vector2(-x + circ.origin.x, +y + circ.origin.y);
@@ -80,77 +86,109 @@ namespace SDL
 
 	void Renderer::RenderRect(Math::Rectangle rect, bool fill)
 	{
-		SDL_Rect r = Math::ToSDL(rect);
-		if(fill)	SDL_RenderFillRect(this->sdlRenderer, &r);
-		else		SDL_RenderDrawRect(this->sdlRenderer, &r);
+		if(fill)	glBegin(GL_POLYGON);
+		else		glBegin(GL_LINES);
+
+		glColor4ub(this->drawColour.r, this->drawColour.g, this->drawColour.b, this->drawColour.a);
+
+		glVertex2d(rect.origin.x, rect.origin.y);
+		glVertex2d(rect.origin.x + rect.width, rect.origin.y);
+		glVertex2d(rect.origin.x + rect.width, rect.origin.y + rect.height);
+		glVertex2d(rect.origin.x, rect.origin.y + rect.height);
+
+		glEnd();
 	}
 
 	void Renderer::RenderLine(Math::Vector2 start, Math::Vector2 end)
 	{
-		// do some math
-		// if dX > dY, then increment x to get y
-		// else if dX < dY, then increment y to get x.
+		glBegin(GL_LINES);
+		this->updateGlColour();
 
-		int32_t dx = end.x - start.x;
-		int32_t dy = end.y - start.y;
+		glVertex2d(start.x, start.y);
+		glVertex2d(end.x, end.y);
 
-		double err = 0.0;
-		double derr = (dx != 0 ? fabs((double) dy / (double) dx) : 1.0);
+		glEnd();
+	}
 
-		int32_t y = start.y;
-		for(int32_t x = start.x; x < end.x; dx > 0 ? x++ : x--)
+	void Renderer::RenderEqTriangle(Math::Vector2 centre, double side)
+	{
+		glBegin(GL_TRIANGLES);
+		this->updateGlColour();
+
+		// left edge (x1, y1)
+		// top edge (x2, y2)
+		// right edge (x3, y3)
+
+		// height = sqrt((hyp^2) - ((side / 2)^2))
+		double halfSide = side / 2;
+		double height = sqrt((side * side) - (halfSide * halfSide));
+
+
+		// x1 = origin.x - (side / 2), y1 = origin.y + (1/3 * height)
+		// x3 = origin.x + (side / 2), y3 = origin.y + (1/3 * height)
+		// x2 = origin.x, y2 = origin.y - (2/3 * height)
+
+		Math::Vector2 left(centre.x - halfSide, centre.y + ((1.0 / 3.0) * height));
+		Math::Vector2 right(centre.x + halfSide, centre.y + ((1.0 / 3.0) * height));
+		Math::Vector2 top(centre.x, centre.y - ((2.0 / 3.0) * height));
+
+		glVertex2d(left.x, left.y);
+		glVertex2d(top.x, top.y);
+		glVertex2d(right.x, right.y);
+
+		glEnd();
+	}
+
+
+
+
+
+
+
+
+
+
+
+
+	void Renderer::Render(Texture* tex, Math::Vector2 pt)
+	{
+		this->Render(tex, pt.x, pt.y);
+	}
+
+	void Renderer::Render(Texture* tex, uint32_t x, uint32_t y)
+	{
+		this->Render(tex, Math::Rectangle(0, 0, tex->width, tex->height), Math::Rectangle(x, y, tex->width, tex->height));
+	}
+
+	void Renderer::Render(Texture* tex, Math::Rectangle dest)
+	{
+		this->Render(tex, dest.origin.x, dest.origin.y);
+	}
+
+	void Renderer::Render(Texture* tex, Math::Rectangle src, Math::Rectangle dest)
+	{
+		double x = dest.origin.x;
+		double y = dest.origin.y;
+
+		double w = dest.width;
+		double h = dest.height;
+
+		double texOffsetX1 = (double) src.origin.x / (double) tex->width;
+		double texOffsetY1 = (double) src.origin.y / (double) tex->height;
+		double texOffsetX2 = (double) ((src.origin.x + src.width) / (double) tex->width);
+		double texOffsetY2 = (double) ((src.origin.y + src.height) / (double) tex->height);
+
+
+		glBindTexture(GL_TEXTURE_2D, tex->glTextureID);
+		this->updateGlColour();
+		glBegin(GL_QUADS);
 		{
-			this->RenderPoint(Vector2(x, y));
-			err += derr;
-
-			if(err >= 0.5)
-			{
-				dy > 0 ? y++ : y--;
-				err -= 1.0;
-			}
+			glTexCoord2d(texOffsetX1, texOffsetY1);		glVertex3d(x, y, 0);
+			glTexCoord2d(texOffsetX2, texOffsetY1);		glVertex3d(x + w, y, 0);
+			glTexCoord2d(texOffsetX2, texOffsetY2);		glVertex3d(x + w, y + h, 0);
+			glTexCoord2d(texOffsetX1, texOffsetY2);		glVertex3d(x, y + h, 0);
 		}
-	}
-
-
-
-
-
-
-
-
-
-
-
-
-
-	void Renderer::Render(Texture* text, Math::Vector2 pt)
-	{
-		this->Render(text, pt.x, pt.y);
-	}
-
-	void Renderer::Render(Texture* text, uint32_t x, uint32_t y)
-	{
-		SDL_Rect tgt;
-		tgt.x = x;
-		tgt.y = y;
-
-		// get the texture's size
-		SDL_QueryTexture(text->sdlTexture, 0, 0, &tgt.w, &tgt.h);
-		SDL_RenderCopy(this->sdlRenderer, text->sdlTexture, 0, &tgt);
-	}
-
-	void Renderer::Render(Texture* text, Math::Rectangle dest)
-	{
-		SDL_Rect d = Math::ToSDL(dest);
-		SDL_RenderCopy(this->sdlRenderer, text->sdlTexture, 0, &d);
-	}
-
-	void Renderer::Render(Texture* text, Math::Rectangle src, Math::Rectangle dest)
-	{
-		SDL_Rect s = Math::ToSDL(src);
-		SDL_Rect d = Math::ToSDL(dest);
-
-		SDL_RenderCopy(this->sdlRenderer, text->sdlTexture, &s, &d);
+		glEnd();
 	}
 
 	void Renderer::RenderText(std::string txt, SDL::Font* font, Math::Vector2 pt)
@@ -164,9 +202,14 @@ namespace SDL
 
 	void Renderer::SetColour(Util::Colour c)
 	{
-		SDL_SetRenderDrawBlendMode(this->sdlRenderer, SDL_BLENDMODE_BLEND);
-		SDL_SetRenderDrawColor(this->sdlRenderer, c.r, c.g, c.b, c.a);
+		// SDL_SetRenderDrawBlendMode(this->sdlRenderer, SDL_BLENDMODE_BLEND);
+		// SDL_SetRenderDrawColor(this->sdlRenderer, c.r, c.g, c.b, c.a);
 		this->drawColour = c;
+	}
+
+	void Renderer::updateGlColour()
+	{
+		glColor4ub(this->drawColour.r, this->drawColour.g, this->drawColour.b, this->drawColour.a);
 	}
 }
 

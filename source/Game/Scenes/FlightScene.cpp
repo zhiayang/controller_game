@@ -41,7 +41,6 @@ namespace Game
 		craft->callsign += std::to_string(num);
 		// printf("callsign: %s\n", craft->callsign.c_str());
 
-		// "pregenerate" these
 		// they shouldn't be able to come from near the corner, or the crafts
 		// risk being missed and go the diagonal corner never to be seen again.
 		uint64_t randxpos = 0;

@@ -68,6 +68,19 @@ namespace Math
 
 
 
+
+
+	Vector2::Vector2(double degrees)
+	{
+		this->x = cos(degreesToRadians(degrees));
+		this->y = -sin(degreesToRadians(degrees));
+	}
+
+	double Vector2::angle()
+	{
+		return atan2(this->x, -this->y);
+	}
+
 	Vector2 Vector2::operator+(Vector2 other)
 	{
 		return Vector2(this->x + other.x, this->y + other.y);

@@ -34,4 +34,5 @@ class Controller
 		Game::Game*		theGame;
 		std::thread		updateLoop;
 		SDL::Font*		debugFont;
+		SDL_GLContext	oglContext;
 };

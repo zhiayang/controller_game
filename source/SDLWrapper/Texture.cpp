@@ -20,14 +20,57 @@ namespace SDL
 		assert(surf);
 		assert(r);
 		this->surf = surf;
-		this->sdlTexture = SDL_CreateTextureFromSurface(r->sdlRenderer, this->surf->sdlSurf);
-		if(!this->sdlTexture)
-			ERROR("Failed to create texture from surface");
+
+		this->width = this->surf->sdlSurf->w;
+		this->height = this->surf->sdlSurf->h;
+
+		// do opengl shit.
+		if(USE_OPENGL)
+		{
+			glGenTextures(1, &this->glTextureID);
+			glBindTexture(GL_TEXTURE_2D, this->glTextureID);
+			int texmode = 0;
+			if(this->surf->sdlSurf->format->BytesPerPixel == 4)
+			{
+				if(this->surf->sdlSurf->format->Rmask == 0x000000FF)
+					texmode = GL_BGRA_EXT;
+
+				else
+					texmode = GL_RGBA;
+			}
+			else
+			{
+				if(this->surf->sdlSurf->format->Rmask == 0x000000FF)
+					texmode = GL_BGR_EXT;
+
+				else
+					texmode = GL_RGB;
+			}
+
+			glTexImage2D(GL_TEXTURE_2D, 0, texmode, this->surf->sdlSurf->w, this->surf->sdlSurf->h, 0, texmode, GL_UNSIGNED_BYTE, this->surf->sdlSurf->pixels);
+
+			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+		}
+		else
+		{
+			this->sdlTexture = SDL_CreateTextureFromSurface(r->sdlRenderer, this->surf->sdlSurf);
+			if(!this->sdlTexture)
+				ERROR("Failed to create texture from surface");
+		}
 	}
 
 	Texture::~Texture()
 	{
-		SDL_DestroyTexture(this->sdlTexture);
+		if(USE_OPENGL)
+		{
+			glDeleteTextures(1, &this->glTextureID);
+		}
+		else
+		{
+			SDL_DestroyTexture(this->sdlTexture);
+		}
+
 		delete this->surf;
 	}
 }

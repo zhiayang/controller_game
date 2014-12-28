@@ -16,7 +16,7 @@ project CoreScript
 
 
 	cxx_invoke			= "{CXX} {CXXFLAGS} -c -o $file$.o $file$";
-	sdl_config_invoke	= "-lSDL2 -lSDL2_image -lSDL2_ttf";
+	sdl_config_invoke	= "-lSDL2 -lSDL2_image -lSDL2_ttf -framework OpenGL -framework GLUT";
 	final_invoke		= "{CXX} {sdl_config_invoke} {CXXFLAGS} -o '{buildDir}/{outputBin}' ";
 
 

@@ -11,9 +11,12 @@
 #include "AssetLoader.h"
 #include <SDL2/SDL_ttf.h>
 #include <SDL2/SDL_image.h>
+#include <SDL2/SDL_opengl.h>
 
 namespace SDL
 {
+	#define USE_OPENGL		1
+
 	struct Texture;
 	struct Font;
 
@@ -21,7 +24,7 @@ namespace SDL
 	{
 		Window(std::string title, int w, int h) : width(w), height(h)
 		{
-			this->sdlWin = SDL_CreateWindow(title.c_str(), 100, 100, w, h, SDL_WINDOW_SHOWN);
+			this->sdlWin = SDL_CreateWindow(title.c_str(), 100, 100, w, h, SDL_WINDOW_SHOWN | SDL_WINDOW_OPENGL);
 			if(!this->sdlWin) ERROR("Failed to initialise SDL Window! (%dx%d)", w, h);
 
 			LOG("Created new SDL Window with dimensions %dx%d", this->width, this->height);
@@ -56,6 +59,7 @@ namespace SDL
 		void RenderCircle(Math::Circle circ, bool fill = true);
 		void RenderRect(Math::Rectangle rect, bool fill = true);
 		void RenderLine(Math::Vector2 start, Math::Vector2 end);
+		void RenderEqTriangle(Math::Vector2 centre, double side);
 
 		// textures
 		void Render(Texture* text, Math::Vector2 at);
@@ -72,6 +76,10 @@ namespace SDL
 		SDL_Renderer* sdlRenderer;
 		Util::Colour drawColour;
 		Window* window;
+
+
+		private:
+			void updateGlColour();
 	};
 
 	struct Surface
@@ -93,7 +101,11 @@ namespace SDL
 		~Texture();
 
 		SDL_Texture* sdlTexture;
+		uint32_t glTextureID;
 		Surface* surf;
+
+		uint64_t width;
+		uint64_t height;
 	};
 
 	struct Font
