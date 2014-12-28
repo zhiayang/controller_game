@@ -18,7 +18,7 @@ namespace Math
 	struct Vector2
 	{
 		Vector2() : x(0), y(0) { }
-		Vector2(int32_t x, int32_t y) : x(x), y(y) { }
+		Vector2(double x, double y) : x(x), y(y) { }
 		Vector2(double degrees);
 		double x;
 		double y;
@@ -26,10 +26,8 @@ namespace Math
 		Vector2 operator+(Vector2 other);
 		Vector2 operator-(Vector2 other);
 		Vector2 operator+=(Vector2 other);
-		Vector2 operator*=(int64_t scalar);
 		Vector2 operator*=(double scalar);
 		Vector2 operator*(double scalar);
-		Vector2 operator*(int64_t scalar);
 		bool operator==(Vector2 other);
 
 		double angle();
@@ -41,7 +39,6 @@ namespace Math
 	{
 		Vector3() : x(0), y(0), z(0) { }
 		Vector3(double x, double y, double z) : x(x), y(y), z(z) { }
-		Vector3(int32_t x, int32_t y, int32_t z) : x(x), y(y), z(z) { }
 
 		double x;
 		double y;
@@ -50,9 +47,7 @@ namespace Math
 		Vector3 operator+(Vector3 other);
 		Vector3 operator-(Vector3 other);
 		Vector3 operator*(double scalar);
-		Vector3 operator*(int64_t scalar);
 		Vector3 operator*=(double scalar);
-		Vector3 operator*=(int64_t scalar);
 		Vector3 operator+=(Vector3 other);
 		bool operator==(Vector3 other);
 

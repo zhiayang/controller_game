@@ -34,11 +34,6 @@ namespace Math
 		return Vector3(this->x * sc, this->y * sc, this->z * sc);
 	}
 
-	Vector3 Vector3::operator*(int64_t sc)
-	{
-		return Vector3(this->x * sc, this->y * sc, this->z * sc);
-	}
-
 	Vector3 Vector3::operator+=(Vector3 other)
 	{
 		*this = *this + other;
@@ -46,12 +41,6 @@ namespace Math
 	}
 
 	Vector3 Vector3::operator*=(double scalar)
-	{
-		*this = *this * scalar;
-		return *this;
-	}
-
-	Vector3 Vector3::operator*=(int64_t scalar)
 	{
 		*this = *this * scalar;
 		return *this;
@@ -78,7 +67,7 @@ namespace Math
 
 	double Vector2::angle()
 	{
-		return atan2(this->x, -this->y);
+		return radiansToDegrees(atan2(this->x, -this->y));
 	}
 
 	Vector2 Vector2::operator+(Vector2 other)
@@ -96,11 +85,6 @@ namespace Math
 		return Vector2(this->x * sc, this->y * sc);
 	}
 
-	Vector2 Vector2::operator*(int64_t sc)
-	{
-		return Vector2(this->x * sc, this->y * sc);
-	}
-
 	Vector2 Vector2::operator+=(Vector2 other)
 	{
 		this->x += other.x;
@@ -110,12 +94,6 @@ namespace Math
 	}
 
 	Vector2 Vector2::operator*=(double scalar)
-	{
-		*this = *this * scalar;
-		return *this;
-	}
-
-	Vector2 Vector2::operator*=(int64_t scalar)
 	{
 		*this = *this * scalar;
 		return *this;

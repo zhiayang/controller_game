@@ -15,7 +15,7 @@ namespace Game
 	static const uint64_t padding			= 10;
 	static const uint64_t cmdPanelHeight	= 30;
 	static const uint64_t offset			= (panelWidth - tabWidth) / 2;
-	static const double SpawnChance			= 0.1;
+	static const double SpawnChance			= 0.05;
 
 	static void RandomiseCraft(FlightScene* scene, Aircraft* craft)
 	{
@@ -39,7 +39,6 @@ namespace Game
 			craft->callsign += "0";
 
 		craft->callsign += std::to_string(num);
-		// printf("callsign: %s\n", craft->callsign.c_str());
 
 		// they shouldn't be able to come from near the corner, or the crafts
 		// risk being missed and go the diagonal corner never to be seen again.
