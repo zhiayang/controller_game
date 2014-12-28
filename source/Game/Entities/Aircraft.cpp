@@ -33,8 +33,8 @@ namespace Game
 		glTranslated(this->pos().x, this->pos().y, 0);
 		glRotated(30, 0, 0, 1);
 		glTranslated(-this->pos().x, -this->pos().y, 0);
-		r->SetColour(Util::Colour::blue());
-		r->RenderEqTriangle(Math::Vector2(this->pos().x, this->pos().y), 100);
+		r->SetColour(this->colour);
+		r->RenderEqTriangle(Math::Vector2(this->pos().x, this->pos().y), 10);
 
 		glPopMatrix();
 
