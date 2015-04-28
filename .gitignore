@@ -41,3 +41,4 @@ scripts/corec
 .travis.yml
 build
 *.xcodeproj
+*.o.m

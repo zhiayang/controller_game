@@ -36,7 +36,7 @@ namespace Game
 
 		// render our callsign
 		r->SetColour(Util::Colour::white());
-		SDL::Font* f = Util::Font::get("pixel", 8, false);
+		SDL::Font* f = Util::Font::get("menlo", 8, true);
 		r->RenderText(this->callsign, f, Math::Vector2(this->pos().x, this->pos().y) + Math::Vector2(3, 3));
 
 		// render our children

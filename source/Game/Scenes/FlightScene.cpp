@@ -39,6 +39,7 @@ namespace Game
 			craft->callsign += "0";
 
 		craft->callsign += std::to_string(num);
+		craft->callsign += "'\"";
 
 		// they shouldn't be able to come from near the corner, or the crafts
 		// risk being missed and go the diagonal corner never to be seen again.
@@ -112,7 +113,7 @@ namespace Game
 			r->RenderRect(Math::Rectangle(xpos, ypos, tabWidth, tabHeight));
 
 			r->SetColour(Util::Colour::white());
-			r->RenderText(this->crafts[i]->callsign, Util::Font::get("pixel", 16), Math::Vector2(xpos + 10, ypos + 10));
+			r->RenderText(this->crafts[i]->callsign, Util::Font::get("menlo", 20, true), Math::Vector2(xpos + 10, ypos + 10));
 		}
 	}
 
